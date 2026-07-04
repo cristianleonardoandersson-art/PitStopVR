@@ -1,6 +1,6 @@
+using PitStopVR.Configuration.Appliers;
+using PitStopVR.Configuration.Backup;
 using PitStopVR.Core.Models;
-using PitStopVR.Core.Serialization;
-using PitStopVR.Knowledge;
 using PitStopVR.Knowledge.Models;
 using System.Diagnostics;
 
@@ -9,35 +9,61 @@ namespace PitStopVR.Configuration;
 public sealed class ProfileApplier
 {
     private readonly string _appDataPath;
+    private readonly List<IConfigurationApplier> _appliers;
 
     public ProfileApplier(string appDataPath)
     {
         _appDataPath = appDataPath;
+        var backupManager = new BackupManager(_appDataPath);
+        _appliers =
+        [
+            new SteamVrApplier(backupManager),
+            new OpenXrApplier(backupManager)
+        ];
     }
 
-    public async Task<ApplyResult> ApplyAsync(MachineProfile machine, Profile profile, GameInfo game)
+    public ProfileApplier(string appDataPath, IEnumerable<IConfigurationApplier> appliers)
     {
-        var result = new ApplyResult { Success = true };
+        _appDataPath = appDataPath;
+        _appliers = appliers.ToList();
+    }
 
-        try
+    public async Task<ApplySummary> ApplyAsync(MachineProfile machine, Profile profile, GameInfo game)
+    {
+        var summary = new ApplySummary
         {
-            var backupPath = CreateBackupFolder();
-            result.BackupPath = backupPath;
+            BackupPath = CreateBackupFolder()
+        };
 
-            if (machine.Software.SteamVrInstalled)
+        foreach (var applier in _appliers)
+        {
+            if (!applier.CanApply(machine))
             {
-                await ApplySteamVrAsync(profile.SteamVr, backupPath);
+                summary.Results.Add(new ApplyResult
+                {
+                    ComponentName = applier.Name,
+                    Success = true,
+                    Skipped = true,
+                    Message = "Componente no disponible en esta maquina"
+                });
+                continue;
             }
 
-            await LaunchGameAsync(game, profile.Game.LaunchArgs);
-        }
-        catch (Exception ex)
-        {
-            result.Success = false;
-            result.ErrorMessage = ex.Message;
+            var result = await applier.ApplyAsync(machine, profile);
+            summary.Results.Add(result);
+
+            if (!result.Success)
+            {
+                summary.Success = false;
+                summary.ErrorMessage = $"Fallo {applier.Name}: {result.ErrorMessage}";
+                return summary;
+            }
         }
 
-        return result;
+        summary.Success = true;
+        LaunchGame(game, profile.Game.LaunchArgs);
+
+        return summary;
     }
 
     private string CreateBackupFolder()
@@ -47,23 +73,38 @@ public sealed class ProfileApplier
         return backupPath;
     }
 
-    private Task ApplySteamVrAsync(SteamVrSettings settings, string backupPath)
+    private static void LaunchGame(GameInfo game, string launchArgs)
     {
-        // TODO: implementar modificación de steamvr.vrsettings con backup.
-        return Task.CompletedTask;
+        if (game.Source == GameSource.Steam)
+        {
+            var url = $"steam://rungameid/{game.Id}//{launchArgs}";
+            Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+        }
+        else if (File.Exists(game.ExecutablePath))
+        {
+            Process.Start(new ProcessStartInfo(game.ExecutablePath, launchArgs) { UseShellExecute = true });
+        }
+        else
+        {
+            throw new InvalidOperationException($"No se encontro ejecutable para lanzar {game.Name}");
+        }
     }
+}
 
-    private Task LaunchGameAsync(GameInfo game, string launchArgs)
-    {
-        var url = $"steam://rungameid/{game.Id}//{launchArgs}";
-        Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
-        return Task.CompletedTask;
-    }
+public sealed class ApplySummary
+{
+    public bool Success { get; set; }
+    public string? BackupPath { get; set; }
+    public string? ErrorMessage { get; set; }
+    public List<ApplyResult> Results { get; set; } = new();
 }
 
 public sealed class ApplyResult
 {
+    public string ComponentName { get; set; } = string.Empty;
     public bool Success { get; set; }
+    public bool Skipped { get; set; }
     public string? BackupPath { get; set; }
+    public string? Message { get; set; }
     public string? ErrorMessage { get; set; }
 }
