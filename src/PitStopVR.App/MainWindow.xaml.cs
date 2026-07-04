@@ -1,11 +1,14 @@
 ﻿using PitStopVR.Core.Models;
 using PitStopVR.Inspector;
+using System.IO;
 using System.Windows;
 
 namespace PitStopVR.App;
 
 public partial class MainWindow : Window
 {
+    private static string KnowledgePath => ResolveKnowledgePath();
+
     public MainWindow()
     {
         InitializeComponent();
@@ -13,7 +16,7 @@ public partial class MainWindow : Window
 
     private void InspectButton_Click(object sender, RoutedEventArgs e)
     {
-        var inspector = new MachineInspector();
+        var inspector = new MachineInspector(KnowledgePath);
         var profile = inspector.Inspect();
         ShowProfile(profile, "Escaneo real");
     }
@@ -23,6 +26,29 @@ public partial class MainWindow : Window
         var inspector = new SimulatedMachineInspector();
         var profile = inspector.Generate();
         ShowProfile(profile, "Simulación");
+    }
+
+    private static string ResolveKnowledgePath()
+    {
+        var baseDirectory = AppContext.BaseDirectory;
+
+        var candidatePaths = new[]
+        {
+            Path.Combine(baseDirectory, "..", "..", "..", "..", "..", "knowledge"),
+            Path.Combine(baseDirectory, "..", "knowledge"),
+            Path.Combine(baseDirectory, "knowledge")
+        };
+
+        foreach (var path in candidatePaths)
+        {
+            var fullPath = Path.GetFullPath(path);
+            if (Directory.Exists(fullPath))
+            {
+                return fullPath;
+            }
+        }
+
+        return string.Empty;
     }
 
     private void ShowProfile(MachineProfile profile, string mode)

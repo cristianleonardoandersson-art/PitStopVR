@@ -36,7 +36,8 @@ public sealed class SimulatedMachineInspector
                 new GameInfo { Id = "690640", Name = "iRacing", InstallDir = @"C:\Program Files (x86)\Steam\steamapps\common\iRacing", Source = GameSource.Steam },
                 new GameInfo { Id = "1171680", Name = "Automobilista 2", InstallDir = @"C:\Program Files (x86)\Steam\steamapps\common\Automobilista 2", Source = GameSource.Steam },
                 new GameInfo { Id = "1061090", Name = "rFactor 2", InstallDir = @"C:\Program Files (x86)\Steam\steamapps\common\rFactor 2", Source = GameSource.Steam },
-                new GameInfo { Id = "amph-2f220080cacc", Name = "Forza Horizon 5", InstallDir = @"C:\XboxGames\Forza Horizon 5", Source = GameSource.Xbox }
+                new GameInfo { Id = "amph-2f220080cacc", Name = "Forza Horizon 5", InstallDir = @"C:\XboxGames\Forza Horizon 5", Source = GameSource.Xbox },
+                new GameInfo { Id = "custom-racing-rfpro.exe", Name = "rFactor Pro", InstallDir = @"C:\SimRacing\Games\rFactor Pro", Source = GameSource.Custom, ExecutablePath = @"C:\SimRacing\Games\rFactor Pro\rfpro.exe" }
             ]
         };
     }

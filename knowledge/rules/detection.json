@@ -51,6 +51,16 @@
       { "id": 1061090, "name": "rFactor 2" },
       { "id": 548430, "name": "Dirt Rally 2.0" },
       { "id": 1369320, "name": "F1 23" }
+    ],
+    "customFolders": [
+      {
+        "id": "custom-racing",
+        "path": "C:\\SimRacing\\Games",
+        "description": "Carpeta personalizada de juegos de simracing",
+        "scanDepth": 1,
+        "executablePatterns": [ "*.exe" ],
+        "excludePatterns": [ "*setup*", "*installer*", "*unins*", "*redist*" ]
+      }
     ]
   }
 }

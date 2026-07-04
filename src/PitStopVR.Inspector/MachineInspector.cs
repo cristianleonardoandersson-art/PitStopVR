@@ -9,9 +9,18 @@ public sealed class MachineInspector
 {
     private readonly GameLibraryDetector _gameDetector;
 
-    public MachineInspector()
+    public MachineInspector(string? knowledgePath = null)
     {
-        _gameDetector = new GameLibraryDetector();
+        if (!string.IsNullOrWhiteSpace(knowledgePath))
+        {
+            var loader = new DetectionConfigLoader(knowledgePath);
+            var config = loader.Load();
+            _gameDetector = new GameLibraryDetector(config);
+        }
+        else
+        {
+            _gameDetector = new GameLibraryDetector();
+        }
     }
 
     public MachineProfile Inspect()

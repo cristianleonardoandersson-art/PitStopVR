@@ -12,7 +12,19 @@ public sealed class GameLibraryDetector
         [
             new SteamGameDetector(),
             new EpicGameDetector(),
-            new OculusGameDetector()
+            new OculusGameDetector(),
+            new CustomGameDetector([])
+        ];
+    }
+
+    public GameLibraryDetector(DetectionConfig config)
+    {
+        _detectors =
+        [
+            new SteamGameDetector(),
+            new EpicGameDetector(),
+            new OculusGameDetector(),
+            new CustomGameDetector(config.Games.CustomFolders)
         ];
     }
 
