@@ -31,11 +31,12 @@ public sealed class SimulatedMachineInspector
             },
             Games =
             [
-                new GameInfo { Id = "244210", Name = "Assetto Corsa", InstallDir = @"C:\Program Files (x86)\Steam\steamapps\common\assettocorsa", Source = "Steam" },
-                new GameInfo { Id = "805550", Name = "Assetto Corsa Competizione", InstallDir = @"C:\Program Files (x86)\Steam\steamapps\common\Assetto Corsa Competizione", Source = "Steam" },
-                new GameInfo { Id = "690640", Name = "iRacing", InstallDir = @"C:\Program Files (x86)\Steam\steamapps\common\iRacing", Source = "Steam" },
-                new GameInfo { Id = "1171680", Name = "Automobilista 2", InstallDir = @"C:\Program Files (x86)\Steam\steamapps\common\Automobilista 2", Source = "Steam" },
-                new GameInfo { Id = "1061090", Name = "rFactor 2", InstallDir = @"C:\Program Files (x86)\Steam\steamapps\common\rFactor 2", Source = "Steam" }
+                new GameInfo { Id = "244210", Name = "Assetto Corsa", InstallDir = @"C:\Program Files (x86)\Steam\steamapps\common\assettocorsa", Source = GameSource.Steam },
+                new GameInfo { Id = "805550", Name = "Assetto Corsa Competizione", InstallDir = @"C:\Program Files (x86)\Steam\steamapps\common\Assetto Corsa Competizione", Source = GameSource.Steam },
+                new GameInfo { Id = "690640", Name = "iRacing", InstallDir = @"C:\Program Files (x86)\Steam\steamapps\common\iRacing", Source = GameSource.Steam },
+                new GameInfo { Id = "1171680", Name = "Automobilista 2", InstallDir = @"C:\Program Files (x86)\Steam\steamapps\common\Automobilista 2", Source = GameSource.Steam },
+                new GameInfo { Id = "1061090", Name = "rFactor 2", InstallDir = @"C:\Program Files (x86)\Steam\steamapps\common\rFactor 2", Source = GameSource.Steam },
+                new GameInfo { Id = "amph-2f220080cacc", Name = "Forza Horizon 5", InstallDir = @"C:\XboxGames\Forza Horizon 5", Source = GameSource.Xbox }
             ]
         };
     }

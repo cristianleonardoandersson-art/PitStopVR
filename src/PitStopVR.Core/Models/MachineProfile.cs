@@ -35,5 +35,16 @@ public sealed class GameInfo
     public string Id { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;
     public string InstallDir { get; set; } = string.Empty;
-    public string Source { get; set; } = "Steam";
+    public GameSource Source { get; set; } = GameSource.Steam;
+    public string ExecutablePath { get; set; } = string.Empty;
+}
+
+public enum GameSource
+{
+    Steam,
+    Epic,
+    Oculus,
+    EA,
+    Xbox,
+    Custom
 }

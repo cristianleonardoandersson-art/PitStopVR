@@ -21,6 +21,7 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="80"/>
                 <DataGridTextColumn Header="Juego" Binding="{Binding Name}" Width="*"/>
+                <DataGridTextColumn Header="Fuente" Binding="{Binding Source}" Width="80"/>
                 <DataGridTextColumn Header="Ruta" Binding="{Binding InstallDir}" Width="2*"/>
             </DataGrid.Columns>
         </DataGrid>
