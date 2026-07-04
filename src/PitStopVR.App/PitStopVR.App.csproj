@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PitStopVR.Core\PitStopVR.Core.csproj" />
+    <ProjectReference Include="..\PitStopVR.Inspector\PitStopVR.Inspector.csproj" />
+    <ProjectReference Include="..\PitStopVR.Knowledge\PitStopVR.Knowledge.csproj" />
+    <ProjectReference Include="..\PitStopVR.Configuration\PitStopVR.Configuration.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,56 @@
+{
+  "version": "0.0.1",
+  "description": "Reglas de detección de software y rutas de configuración",
+  "detection": {
+    "steam": {
+      "registryPaths": [
+        "HKEY_CURRENT_USER\\Software\\Valve\\Steam",
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Valve\\Steam"
+      ],
+      "registryValue": "SteamPath",
+      "libraryFoldersFile": "steamapps/libraryfolders.vdf",
+      "appManifestPattern": "steamapps/appmanifest_*.acf",
+      "executable": "Steam.exe"
+    },
+    "steamvr": {
+      "relativePath": "steamapps/common/SteamVR",
+      "configFile": "config/steamvr.vrsettings",
+      "executable": "bin/win64/vrserver.exe",
+      "processes": [ "vrserver", "vrmonitor", "vrcompositor" ]
+    },
+    "metaQuestLink": {
+      "defaultInstallPath": "C:\\Program Files\\Oculus\\Support\\oculus-client",
+      "registryPaths": [
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Oculus VR, LLC\\Oculus",
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\Oculus VR, LLC\\Oculus"
+      ],
+      "serviceName": "OVRService",
+      "executable": "OculusClient.exe"
+    },
+    "oculusDebugTool": {
+      "relativePath": "C:\\Program Files\\Oculus\\Support\\oculus-diagnostics\\OculusDebugTool.exe",
+      "adbSettings": {
+        "bitrate": "setscreenrefresh",
+        "fovTangent": "setfov"
+      }
+    },
+    "openxr": {
+      "registryPaths": [
+        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Khronos\\OpenXR\\1",
+        "HKEY_CURRENT_USER\\SOFTWARE\\Khronos\\OpenXR\\1"
+      ],
+      "activeRuntimeValue": "ActiveRuntime"
+    }
+  },
+  "games": {
+    "steamAppIds": [
+      { "id": 244210, "name": "Assetto Corsa" },
+      { "id": 805550, "name": "Assetto Corsa Competizione" },
+      { "id": 690640, "name": "iRacing" },
+      { "id": 1171680, "name": "Automobilista 2" },
+      { "id": 1061090, "name": "rFactor 2" },
+      { "id": 548430, "name": "Dirt Rally 2.0" },
+      { "id": 1369320, "name": "F1 23" }
+    ]
+  }
+}

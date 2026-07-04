@@ -1,0 +1,17 @@
+bin/
+obj/
+*.user
+*.suo
+.vs/
+*.swp
+*.log
+.idea/
+*.DotSettings
+launchSettings.json
+*.db
+*.db-journal
+publish/
+out/
+coverage/
+TestResults/
+*.nupkg

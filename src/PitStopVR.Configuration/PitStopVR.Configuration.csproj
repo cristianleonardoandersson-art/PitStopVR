@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0-windows</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PitStopVR.Core\PitStopVR.Core.csproj" />
+    <ProjectReference Include="..\PitStopVR.Knowledge\PitStopVR.Knowledge.csproj" />
+  </ItemGroup>
+
+</Project>

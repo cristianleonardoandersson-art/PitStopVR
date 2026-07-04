@@ -1,0 +1,32 @@
+﻿<Window x:Class="PitStopVR.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PitStopVR.App"
+        mc:Ignorable="d"
+        Title="PitStop VR" Height="600" Width="900">
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="PitStop VR" FontSize="24" FontWeight="Bold" Margin="0,0,0,8"/>
+        <TextBlock Grid.Row="1" Text="Administrador inteligente del ecosistema VR para simracing" Margin="0,0,0,16"/>
+
+        <DataGrid Grid.Row="2" x:Name="GamesDataGrid" AutoGenerateColumns="False" IsReadOnly="True" Margin="0,0,0,16">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="80"/>
+                <DataGridTextColumn Header="Juego" Binding="{Binding Name}" Width="*"/>
+                <DataGridTextColumn Header="Ruta" Binding="{Binding InstallDir}" Width="2*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button x:Name="InspectButton" Content="Escanear PC" Padding="12,6" Click="InspectButton_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

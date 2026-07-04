@@ -1,0 +1,94 @@
+{
+  "version": "0.0.1",
+  "description": "Perfiles base de configuración VR para simracing",
+  "profiles": [
+    {
+      "id": "max_quality",
+      "name": "Máxima calidad",
+      "description": "Prioriza calidad visual sobre rendimiento.",
+      "steamvr": {
+        "resolutionPerEye": 1.5,
+        "motionSmoothing": true,
+        "refreshRate": 90
+      },
+      "openxr": {
+        "preferredRuntime": "steamvr"
+      },
+      "odt": {
+        "bitrateMbps": 250,
+        "adaptiveGpuScale": true,
+        "fovTangent": 0,
+        "encoderResolution": 1.0
+      },
+      "game": {
+        "launchArgs": "-vr"
+      }
+    },
+    {
+      "id": "balanced",
+      "name": "Equilibrado",
+      "description": "Balance entre calidad y rendimiento.",
+      "steamvr": {
+        "resolutionPerEye": 1.0,
+        "motionSmoothing": true,
+        "refreshRate": 90
+      },
+      "openxr": {
+        "preferredRuntime": "steamvr"
+      },
+      "odt": {
+        "bitrateMbps": 200,
+        "adaptiveGpuScale": true,
+        "fovTangent": 0,
+        "encoderResolution": 1.0
+      },
+      "game": {
+        "launchArgs": "-vr"
+      }
+    },
+    {
+      "id": "competition",
+      "name": "Competición",
+      "description": "Máximo rendimiento y latencia mínima.",
+      "steamvr": {
+        "resolutionPerEye": 0.9,
+        "motionSmoothing": false,
+        "refreshRate": 120
+      },
+      "openxr": {
+        "preferredRuntime": "steamvr"
+      },
+      "odt": {
+        "bitrateMbps": 300,
+        "adaptiveGpuScale": false,
+        "fovTangent": 0,
+        "encoderResolution": 1.0
+      },
+      "game": {
+        "launchArgs": "-vr"
+      }
+    },
+    {
+      "id": "streaming",
+      "name": "Streaming",
+      "description": "Optimizado para capturar y transmitir.",
+      "steamvr": {
+        "resolutionPerEye": 1.0,
+        "motionSmoothing": true,
+        "refreshRate": 90
+      },
+      "openxr": {
+        "preferredRuntime": "steamvr"
+      },
+      "odt": {
+        "bitrateMbps": 200,
+        "adaptiveGpuScale": true,
+        "fovTangent": 0,
+        "encoderResolution": 1.0
+      },
+      "game": {
+        "launchArgs": "-vr"
+      }
+    }
+  ]
+}
