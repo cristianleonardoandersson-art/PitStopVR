@@ -39,6 +39,8 @@ public sealed class OdtSettings
     public bool AdaptiveGpuScale { get; set; }
     public int FovTangent { get; set; }
     public double EncoderResolution { get; set; }
+    public int RefreshRate { get; set; }
+    public int FoveationLevel { get; set; }
 }
 
 public sealed class GameSettings

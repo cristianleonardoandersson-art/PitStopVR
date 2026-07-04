@@ -18,7 +18,8 @@ public sealed class ProfileApplier
         _appliers =
         [
             new SteamVrApplier(backupManager),
-            new OpenXrApplier(backupManager)
+            new OpenXrApplier(backupManager),
+            new OdtApplier(backupManager)
         ];
     }
 

@@ -18,7 +18,9 @@
         "bitrateMbps": 250,
         "adaptiveGpuScale": true,
         "fovTangent": 0,
-        "encoderResolution": 1.0
+        "encoderResolution": 1.0,
+        "refreshRate": 90,
+        "foveationLevel": 0
       },
       "game": {
         "launchArgs": "-vr"
@@ -40,7 +42,9 @@
         "bitrateMbps": 200,
         "adaptiveGpuScale": true,
         "fovTangent": 0,
-        "encoderResolution": 1.0
+        "encoderResolution": 1.0,
+        "refreshRate": 90,
+        "foveationLevel": 1
       },
       "game": {
         "launchArgs": "-vr"
@@ -62,7 +66,9 @@
         "bitrateMbps": 300,
         "adaptiveGpuScale": false,
         "fovTangent": 0,
-        "encoderResolution": 1.0
+        "encoderResolution": 1.0,
+        "refreshRate": 120,
+        "foveationLevel": 2
       },
       "game": {
         "launchArgs": "-vr"
@@ -84,7 +90,9 @@
         "bitrateMbps": 200,
         "adaptiveGpuScale": true,
         "fovTangent": 0,
-        "encoderResolution": 1.0
+        "encoderResolution": 1.0,
+        "refreshRate": 90,
+        "foveationLevel": 1
       },
       "game": {
         "launchArgs": "-vr"

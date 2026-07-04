@@ -85,7 +85,8 @@ public partial class MainWindow : Window
             applier = new ProfileApplier(AppDataPath,
             [
                 new SimulatedConfigurationApplier("SteamVR"),
-                new SimulatedConfigurationApplier("OpenXR")
+                new SimulatedConfigurationApplier("OpenXR"),
+                new SimulatedConfigurationApplier("Oculus Debug Tool")
             ]);
         }
         else
