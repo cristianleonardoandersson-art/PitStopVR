@@ -1,0 +1,53 @@
+{
+  "id": "00000000000000000000000000000000",
+  "generatedAt": "2026-07-04T12:00:00Z",
+  "hardware": {
+    "cpu": "AMD Ryzen 7 7800X3D",
+    "gpu": "NVIDIA GeForce RTX 4070 Ti",
+    "ramBytes": 34359738368,
+    "motherboard": "MSI MAG X670E TOMAHAWK WIFI",
+    "operatingSystem": "Microsoft Windows 11 Pro"
+  },
+  "software": {
+    "steamInstalled": true,
+    "steamPath": "C:\\Program Files (x86)\\Steam",
+    "steamVrInstalled": true,
+    "steamVrPath": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\SteamVR",
+    "metaQuestLinkInstalled": true,
+    "metaQuestLinkPath": "C:\\Program Files\\Oculus\\Support\\oculus-client",
+    "openXrRuntimeDetected": true,
+    "openXrRuntimePath": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\SteamVR\\steamxr_win64.json"
+  },
+  "games": [
+    {
+      "id": "244210",
+      "name": "Assetto Corsa",
+      "installDir": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\assettocorsa",
+      "source": "Steam"
+    },
+    {
+      "id": "805550",
+      "name": "Assetto Corsa Competizione",
+      "installDir": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Assetto Corsa Competizione",
+      "source": "Steam"
+    },
+    {
+      "id": "690640",
+      "name": "iRacing",
+      "installDir": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\iRacing",
+      "source": "Steam"
+    },
+    {
+      "id": "1171680",
+      "name": "Automobilista 2",
+      "installDir": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Automobilista 2",
+      "source": "Steam"
+    },
+    {
+      "id": "1061090",
+      "name": "rFactor 2",
+      "installDir": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\rFactor 2",
+      "source": "Steam"
+    }
+  ]
+}

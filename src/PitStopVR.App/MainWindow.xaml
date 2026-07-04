@@ -26,7 +26,8 @@
         </DataGrid>
 
         <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button x:Name="InspectButton" Content="Escanear PC" Padding="12,6" Click="InspectButton_Click"/>
+            <Button x:Name="InspectButton" Content="Escanear PC real" Padding="12,6" Click="InspectButton_Click" Margin="0,0,8,0"/>
+            <Button x:Name="SimulateButton" Content="Cargar simulación" Padding="12,6" Click="SimulateButton_Click" Background="Orange" Foreground="Black"/>
         </StackPanel>
     </Grid>
 </Window>
