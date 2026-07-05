@@ -21,6 +21,7 @@
     <ProjectReference Include="..\..\src\PitStopVR.Inspector\PitStopVR.Inspector.csproj" />
     <ProjectReference Include="..\..\src\PitStopVR.Knowledge\PitStopVR.Knowledge.csproj" />
     <ProjectReference Include="..\..\src\PitStopVR.Configuration\PitStopVR.Configuration.csproj" />
+    <ProjectReference Include="..\..\src\PitStopVR.Telemetry\PitStopVR.Telemetry.csproj" />
   </ItemGroup>
 
 </Project>

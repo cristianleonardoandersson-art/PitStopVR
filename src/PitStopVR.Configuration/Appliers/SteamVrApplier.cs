@@ -36,7 +36,7 @@ public sealed class SteamVrApplier : IConfigurationApplier
                 return Task.FromResult(result);
             }
 
-            var backup = _backupManager.BackupFile(configFile);
+            var backup = _backupManager.BackupFile(configFile, Name);
             result.BackupPath = backup.BackupPath;
 
             if (!backup.Success && !backup.Skipped)

@@ -33,10 +33,19 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button x:Name="InspectButton" Content="Escanear PC real" Padding="12,6" Click="InspectButton_Click" Margin="0,0,8,0"/>
-            <Button x:Name="SimulateButton" Content="Cargar simulación" Padding="12,6" Click="SimulateButton_Click" Background="Orange" Foreground="Black" Margin="0,0,8,0"/>
-            <Button x:Name="ApplyButton" Content="Aplicar perfil y lanzar" Padding="12,6" Click="ApplyButton_Click" Background="Green" Foreground="White"/>
+        <StackPanel Grid.Row="4" Orientation="Vertical" HorizontalAlignment="Right">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,8">
+                <Button x:Name="InspectButton" Content="Escanear PC real" Padding="12,6" Click="InspectButton_Click" Margin="0,0,8,0"/>
+                <Button x:Name="SimulateButton" Content="Cargar simulación" Padding="12,6" Click="SimulateButton_Click" Background="Orange" Foreground="Black" Margin="0,0,8,0"/>
+                <Button x:Name="RestoreBackupsButton" Content="Restaurar backups" Padding="12,6" Click="RestoreBackupsButton_Click" Margin="0,0,8,0"/>
+                <Button x:Name="HistoryButton" Content="Ver historial" Padding="12,6" Click="HistoryButton_Click" Margin="0,0,8,0"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button x:Name="EcosystemButton" Content="Verificar ecosistema" Padding="12,6" Click="EcosystemButton_Click" Margin="0,0,8,0"/>
+                <Button x:Name="SettingsButton" Content="Configuración" Padding="12,6" Click="SettingsButton_Click" Margin="0,0,8,0"/>
+                <Button x:Name="ApplyButton" Content="Aplicar perfil y lanzar" Padding="12,6" Click="ApplyButton_Click" Background="Green" Foreground="White"/>
+                <Button x:Name="EndSessionButton" Content="Finalizar sesión de análisis" Padding="12,6" Click="EndSessionButton_Click" Background="DarkOrange" Foreground="White" Visibility="Collapsed" Margin="0,0,8,0"/>
+            </StackPanel>
         </StackPanel>
     </Grid>
 </Window>

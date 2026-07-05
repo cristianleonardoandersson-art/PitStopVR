@@ -4,6 +4,12 @@ using PitStopVR.Core.Models;
 using PitStopVR.Inspector;
 using PitStopVR.Knowledge;
 using PitStopVR.Knowledge.Models;
+using PitStopVR.Telemetry.Analysis;
+using PitStopVR.Telemetry.Collectors;
+using PitStopVR.Telemetry.Collectors.Adapters.OpenVR;
+using PitStopVR.Telemetry.Configuration;
+using PitStopVR.Telemetry.History;
+using PitStopVR.Telemetry.Models;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -19,6 +25,7 @@ public partial class MainWindow : Window
 
     private MachineProfile? _currentProfile;
     private ProfileSet? _profileSet;
+    private SessionRecorder? _sessionRecorder;
 
     public MainWindow()
     {
@@ -107,11 +114,111 @@ public partial class MainWindow : Window
                 "Aplicar perfil",
                 MessageBoxButton.OK,
                 result.Success ? MessageBoxImage.Information : MessageBoxImage.Error);
+
+            if (result.Success)
+            {
+                await StartTelemetrySessionAsync(selectedGame, selectedProfile, _currentProfile, isSimulation);
+            }
         }
         catch (Exception ex)
         {
             MessageBox.Show($"Error al aplicar el perfil: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
+    }
+
+    private async Task StartTelemetrySessionAsync(GameInfo game, Profile profile, MachineProfile machine, bool isSimulation)
+    {
+        var settings = new TelemetrySettingsStore(AppDataPath).Load();
+        OpenVRNative.ManualApiPath = settings.SteamVRPath;
+
+        _sessionRecorder?.Dispose();
+        _sessionRecorder = new SessionRecorder(AppDataPath, isSimulation, settings.AdbPath);
+        await _sessionRecorder.StartSessionAsync(game, profile, machine);
+
+        if (isSimulation)
+        {
+            var summary = await _sessionRecorder.StopSessionAsync();
+            if (summary is not null)
+            {
+                summary.Bottleneck = BottleneckAnalyzer.Analyze(summary);
+                SaveAndShowResults(summary);
+            }
+        }
+        else
+        {
+            ApplyButton.Visibility = Visibility.Collapsed;
+            EndSessionButton.Visibility = Visibility.Visible;
+
+            MessageBox.Show(
+                "Sesión de análisis iniciada. Jugá lo que quieras y, cuando termines, hacé clic en 'Finalizar sesión de análisis' para ver los resultados.",
+                "Análisis de rendimiento",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+        }
+    }
+
+    private async void EndSessionButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_sessionRecorder is null || !_sessionRecorder.IsRecording)
+        {
+            return;
+        }
+
+        try
+        {
+            var summary = await _sessionRecorder.StopSessionAsync();
+            _sessionRecorder.Dispose();
+            _sessionRecorder = null;
+
+            ApplyButton.Visibility = Visibility.Visible;
+            EndSessionButton.Visibility = Visibility.Collapsed;
+
+            if (summary is null)
+            {
+                MessageBox.Show("No se pudo generar el resumen de la sesión.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            SaveAndShowResults(summary);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Error al finalizar la sesión: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    private void SaveAndShowResults(SessionSummary summary)
+    {
+        var historyStore = new SessionHistoryStore(AppDataPath);
+        historyStore.SaveSession(summary);
+
+        var resultsWindow = new SessionResultsWindow(summary) { Owner = this };
+        resultsWindow.ShowDialog();
+    }
+
+    private void RestoreBackupsButton_Click(object sender, RoutedEventArgs e)
+    {
+        var restoreWindow = new RestoreWindow { Owner = this };
+        restoreWindow.ShowDialog();
+    }
+
+    private void HistoryButton_Click(object sender, RoutedEventArgs e)
+    {
+        var historyWindow = new SessionHistoryWindow { Owner = this };
+        historyWindow.ShowDialog();
+    }
+
+    private void SettingsButton_Click(object sender, RoutedEventArgs e)
+    {
+        var settingsWindow = new SettingsWindow(AppDataPath) { Owner = this };
+        settingsWindow.ShowDialog();
+    }
+
+    private void EcosystemButton_Click(object sender, RoutedEventArgs e)
+    {
+        var machine = _currentProfile ?? new MachineProfile();
+        var ecosystemWindow = new EcosystemCheckWindow(AppDataPath, machine) { Owner = this };
+        ecosystemWindow.ShowDialog();
     }
 
     private static string ResolveKnowledgePath()

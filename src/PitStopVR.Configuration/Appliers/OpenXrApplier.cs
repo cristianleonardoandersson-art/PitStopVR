@@ -36,7 +36,7 @@ public sealed class OpenXrApplier : IConfigurationApplier
                 return Task.FromResult(result);
             }
 
-            var backup = _backupManager.BackupRegistryKey(baseKey, keyPath);
+            var backup = _backupManager.BackupRegistryKey(baseKey, keyPath, Name);
             result.BackupPath = backup.BackupPath;
 
             if (!backup.Success && !backup.Skipped)

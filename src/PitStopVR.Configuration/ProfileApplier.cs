@@ -9,34 +9,54 @@ namespace PitStopVR.Configuration;
 public sealed class ProfileApplier
 {
     private readonly string _appDataPath;
-    private readonly List<IConfigurationApplier> _appliers;
+    private readonly List<IConfigurationApplier>? _fixedAppliers;
 
     public ProfileApplier(string appDataPath)
     {
         _appDataPath = appDataPath;
-        var backupManager = new BackupManager(_appDataPath);
-        _appliers =
-        [
-            new SteamVrApplier(backupManager),
-            new OpenXrApplier(backupManager),
-            new OdtApplier(backupManager)
-        ];
+        _fixedAppliers = null;
     }
 
     public ProfileApplier(string appDataPath, IEnumerable<IConfigurationApplier> appliers)
     {
         _appDataPath = appDataPath;
-        _appliers = appliers.ToList();
+        _fixedAppliers = appliers.ToList();
     }
 
     public async Task<ApplySummary> ApplyAsync(MachineProfile machine, Profile profile, GameInfo game)
     {
+        var sessionPath = CreateBackupFolder();
         var summary = new ApplySummary
         {
-            BackupPath = CreateBackupFolder()
+            BackupPath = sessionPath
         };
 
-        foreach (var applier in _appliers)
+        var backupManager = new BackupManager(sessionPath);
+        var isSimulated = _fixedAppliers is not null;
+        List<IConfigurationApplier> appliers;
+
+        if (_fixedAppliers is not null)
+        {
+            appliers = _fixedAppliers;
+            foreach (var applier in appliers)
+            {
+                if (applier is ISessionAwareApplier sessionAware)
+                {
+                    sessionAware.SetSession(backupManager);
+                }
+            }
+        }
+        else
+        {
+            appliers =
+            [
+                new SteamVrApplier(backupManager),
+                new OpenXrApplier(backupManager),
+                new OdtApplier(backupManager)
+            ];
+        }
+
+        foreach (var applier in appliers)
         {
             if (!applier.CanApply(machine))
             {
@@ -57,14 +77,36 @@ public sealed class ProfileApplier
             {
                 summary.Success = false;
                 summary.ErrorMessage = $"Fallo {applier.Name}: {result.ErrorMessage}";
+                SaveManifest(backupManager, sessionPath, profile, game, isSimulated);
                 return summary;
             }
         }
 
         summary.Success = true;
+        SaveManifest(backupManager, sessionPath, profile, game, isSimulated);
         LaunchGame(game, profile.Game.LaunchArgs);
 
         return summary;
+    }
+
+    private static void SaveManifest(BackupManager backupManager, string sessionPath, Profile profile, GameInfo game, bool isSimulated)
+    {
+        if (backupManager.Entries.Count == 0)
+        {
+            return;
+        }
+
+        var manifest = new BackupManifest
+        {
+            Timestamp = DateTime.Now,
+            ProfileName = profile.Name,
+            GameName = game.Name,
+            SessionPath = sessionPath,
+            IsSimulated = isSimulated,
+            Entries = backupManager.Entries.ToList()
+        };
+
+        manifest.Save(sessionPath);
     }
 
     private string CreateBackupFolder()

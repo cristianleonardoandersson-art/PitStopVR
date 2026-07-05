@@ -1,31 +1,40 @@
 using Microsoft.Win32;
-using System.Text;
 
 namespace PitStopVR.Configuration.Backup;
 
 public sealed class BackupManager
 {
-    private readonly string _backupBasePath;
+    private readonly string _sessionPath;
+    private readonly List<BackupEntry> _entries = new();
 
-    public BackupManager(string backupBasePath)
+    public IReadOnlyList<BackupEntry> Entries => _entries;
+
+    public BackupManager(string sessionPath)
     {
-        _backupBasePath = backupBasePath;
+        _sessionPath = sessionPath;
+        Directory.CreateDirectory(_sessionPath);
     }
 
-    public BackupResult BackupFile(string filePath)
+    public BackupResult BackupFile(string filePath, string componentName)
     {
         if (!File.Exists(filePath))
         {
             return BackupResult.ForSkipped(filePath, "El archivo no existe");
         }
 
-        var backupFolder = CreateTimestampedFolder();
         var fileName = Path.GetFileName(filePath);
-        var backupPath = Path.Combine(backupFolder, fileName);
+        var backupPath = Path.Combine(_sessionPath, fileName);
 
         try
         {
             File.Copy(filePath, backupPath, overwrite: true);
+            _entries.Add(new BackupEntry
+            {
+                ComponentName = componentName,
+                Type = BackupEntryType.File,
+                OriginalPath = filePath,
+                BackupPath = backupPath
+            });
             return BackupResult.Successful(filePath, backupPath);
         }
         catch (Exception ex)
@@ -34,36 +43,60 @@ public sealed class BackupManager
         }
     }
 
-    public BackupResult BackupRegistryKey(RegistryKey baseKey, string keyPath)
+    public BackupResult BackupRegistryKey(RegistryKey baseKey, string keyPath, string componentName)
     {
-        var backupFolder = CreateTimestampedFolder();
-        var baseKeyName = baseKey.Name.Contains('\\') ? baseKey.Name[(baseKey.Name.IndexOf('\\') + 1)..] : baseKey.Name;
-        var backupPath = Path.Combine(backupFolder, $"{baseKeyName}_{keyPath.Replace('\\', '_')}.reg");
+        var fullKeyPath = $@"{baseKey.Name}\{keyPath}";
+        var fileBaseName = baseKey.Name.Contains('\\') ? baseKey.Name[(baseKey.Name.IndexOf('\\') + 1)..] : baseKey.Name;
+        var backupPath = Path.Combine(_sessionPath, $"{fileBaseName}_{keyPath.Replace('\\', '_')}.reg");
 
         try
         {
-            ExportRegistryKey(keyPath, backupPath);
-            return BackupResult.Successful(keyPath, backupPath);
+            ExportRegistryKey(fullKeyPath, backupPath);
+            _entries.Add(new BackupEntry
+            {
+                ComponentName = componentName,
+                Type = BackupEntryType.Registry,
+                OriginalPath = fullKeyPath,
+                BackupPath = backupPath
+            });
+            return BackupResult.Successful(fullKeyPath, backupPath);
         }
         catch (Exception ex)
         {
-            return BackupResult.Failed(keyPath, ex.Message);
+            return BackupResult.Failed(fullKeyPath, ex.Message);
         }
     }
 
-    private string CreateTimestampedFolder()
+    public BackupResult RecordSimulatedBackup(string componentName, string description)
     {
-        var folder = Path.Combine(_backupBasePath, DateTime.Now.ToString("yyyyMMdd_HHmmss_fff"));
-        Directory.CreateDirectory(folder);
-        return folder;
+        var fileName = $"{componentName.Replace(' ', '_')}_simulado.txt";
+        var backupPath = Path.Combine(_sessionPath, fileName);
+        var originalPath = $"[SIMULACION] {componentName}";
+
+        try
+        {
+            File.WriteAllText(backupPath, $"[SIMULACION] {DateTime.Now:yyyy-MM-dd HH:mm:ss}\nComponente: {componentName}\n{description}");
+            _entries.Add(new BackupEntry
+            {
+                ComponentName = componentName,
+                Type = BackupEntryType.Simulated,
+                OriginalPath = originalPath,
+                BackupPath = backupPath
+            });
+            return BackupResult.Successful(originalPath, backupPath);
+        }
+        catch (Exception ex)
+        {
+            return BackupResult.Failed(originalPath, ex.Message);
+        }
     }
 
-    private static void ExportRegistryKey(string keyPath, string exportPath)
+    private static void ExportRegistryKey(string fullKeyPath, string exportPath)
     {
         var startInfo = new System.Diagnostics.ProcessStartInfo
         {
             FileName = "reg.exe",
-            Arguments = $"export \"{keyPath}\" \"{exportPath}\" /y",
+            Arguments = $"export \"{fullKeyPath}\" \"{exportPath}\" /y",
             RedirectStandardOutput = true,
             RedirectStandardError = true,
             UseShellExecute = false,
@@ -76,7 +109,7 @@ public sealed class BackupManager
         if (process.ExitCode != 0)
         {
             var error = process.StandardError.ReadToEnd();
-            throw new InvalidOperationException($"No se pudo exportar la clave de registro {keyPath}: {error}");
+            throw new InvalidOperationException($"No se pudo exportar la clave de registro {fullKeyPath}: {error}");
         }
     }
 }

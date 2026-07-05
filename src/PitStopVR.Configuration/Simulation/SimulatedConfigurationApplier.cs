@@ -1,16 +1,24 @@
 using PitStopVR.Configuration.Appliers;
+using PitStopVR.Configuration.Backup;
 using PitStopVR.Core.Models;
 using PitStopVR.Knowledge.Models;
 
 namespace PitStopVR.Configuration.Simulation;
 
-public sealed class SimulatedConfigurationApplier : IConfigurationApplier
+public sealed class SimulatedConfigurationApplier : IConfigurationApplier, ISessionAwareApplier
 {
+    private BackupManager? _backupManager;
+
     public string Name { get; }
 
     public SimulatedConfigurationApplier(string name)
     {
         Name = name;
+    }
+
+    public void SetSession(BackupManager backupManager)
+    {
+        _backupManager = backupManager;
     }
 
     public bool CanApply(MachineProfile profile)
@@ -28,12 +36,21 @@ public sealed class SimulatedConfigurationApplier : IConfigurationApplier
             _ => string.Empty
         };
 
+        var message = $"[SIMULACION] Se aplicaria la configuracion de {Name}{extra}";
+        var backupPath = $"[SIMULACION] Backup de {Name}";
+
+        if (_backupManager is not null)
+        {
+            var backup = _backupManager.RecordSimulatedBackup(Name, message);
+            backupPath = backup.BackupPath ?? backupPath;
+        }
+
         var result = new ApplyResult
         {
             ComponentName = Name,
             Success = true,
-            Message = $"[SIMULACION] Se aplicaria la configuracion de {Name}{extra}",
-            BackupPath = $"[SIMULACION] Backup de {Name}"
+            Message = message,
+            BackupPath = backupPath
         };
 
         return Task.FromResult(result);
