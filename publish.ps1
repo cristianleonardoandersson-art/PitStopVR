@@ -4,7 +4,8 @@ param(
     [string]$Runtime = "win-x64",
     [switch]$SelfContained = $true,
     [string]$OutputDirectory = "",
-    [switch]$Zip = $false
+    [switch]$Zip = $false,
+    [string]$Version = ""
 )
 
 $ErrorActionPreference = "Stop"
@@ -30,13 +31,16 @@ if (-not $?) {
 
 Write-Host "SDK .NET detectado: $DotNetVersion" -ForegroundColor Cyan
 
-# Intenta extraer la versión del proyecto si existe un archivo VERSION, sino usa 1.0.0
-$Version = "1.0.0"
-if (Test-Path $VersionFile) {
-    $Version = (Get-Content $VersionFile -Raw).Trim()
+# Resuelve la versión: parámetro > VERSION.txt > 1.0.0
+$ResolvedVersion = "1.0.0"
+if (-not [string]::IsNullOrWhiteSpace($Version)) {
+    $ResolvedVersion = $Version
+}
+elseif (Test-Path $VersionFile) {
+    $ResolvedVersion = (Get-Content $VersionFile -Raw).Trim()
 }
 
-Write-Host "Publicando PitStopVR v$Version..." -ForegroundColor Cyan
+Write-Host "Publicando PitStopVR v$ResolvedVersion..." -ForegroundColor Cyan
 Write-Host "  Configuración: $Configuration" -ForegroundColor Gray
 Write-Host "  Runtime: $Runtime" -ForegroundColor Gray
 Write-Host "  Self-contained: $SelfContained" -ForegroundColor Gray
@@ -72,7 +76,7 @@ if (Test-Path $InstallerSource) {
 
 # Crear ZIP si se solicitó
 if ($Zip) {
-    $ZipPath = Join-Path $RepoRoot "PitStopVR-v$Version-$Runtime.zip"
+    $ZipPath = Join-Path $RepoRoot "PitStopVR-v$ResolvedVersion-$Runtime.zip"
     if (Test-Path $ZipPath) {
         Remove-Item $ZipPath -Force
     }
